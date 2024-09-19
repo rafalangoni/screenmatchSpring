@@ -7,6 +7,8 @@ import br.com.langoni.screenmatchSpring.model.SeriesData;
 import br.com.langoni.screenmatchSpring.service.ConsumeApi;
 import br.com.langoni.screenmatchSpring.service.ConvertData;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -57,5 +59,21 @@ public class Main {
                 .collect(Collectors.toList());
 
         episodes.forEach(System.out::println);
+
+        System.out.println("Which year do you want to see the episodes?");
+        var year = read.nextInt();
+        read.nextLine();
+
+        //Searching for specific date, formatting date first
+        LocalDate searchDate = LocalDate.of(year, 1, 1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        episodes.stream()
+                .filter(e -> e.getLaunchData() != null && e.getLaunchData().isAfter(searchDate))
+                .forEach(e -> System.out.println(
+                        "Season: "+e.getSeason() +
+                                "Episode: "+e.getTitle()+
+                                "Launch data: "+e.getLaunchData().format(formatter)
+                ));
     }
 }
